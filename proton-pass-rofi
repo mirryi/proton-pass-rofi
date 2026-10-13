@@ -460,7 +460,7 @@ def item_list_payload(item: Item) -> dict[str, Any]:
 def field_from_json(data: dict[str, Any], field: str) -> str | None:
     login = first_login_payload(data)
     field_map = {
-        "username": ("username", "item_username", "itemUsername"),
+        "username": ("username", "item_username", "itemUsername", "email"),
         "email": ("email", "item_email", "itemEmail"),
         "password": ("password",),
         "totp": ("totp_uri", "totpUri", "totp"),
@@ -488,8 +488,7 @@ def field_value(pass_cli: str, item: Item, field: str) -> str:
     value = field_from_json(data, field)
     if value:
         return value
-    output = run_capture([pass_cli, "item", "view", *item_ref_args(item), "--field", field])
-    return clean_secret_output(output)
+    raise ProtonPassRofiError(f"Item has no {field}.")
 
 
 def totp_value(pass_cli: str, item: Item) -> str:
