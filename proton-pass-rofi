@@ -480,6 +480,8 @@ def field_from_json(data: dict[str, Any], field: str) -> str | None:
         value = login.get(key)
         if isinstance(value, (str, int, float)) and str(value):
             return str(value)
+    if field in ("username", "email"):
+        return nested_scalar(data, "item", "alias_email") or scalar(data, "alias_email")
     return None
 
 
